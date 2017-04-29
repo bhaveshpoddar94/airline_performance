@@ -1,0 +1,102 @@
+{% extends 'pages/blank.html' %}
+
+{% block head %}
+{%endblock%}
+
+<script type="text/javascript">
+{%block jquery%}
+    var endpoint = '/api/busiest-airports/'
+    $.ajax({
+        method: "GET",
+        url: endpoint,
+        success: function(data){
+        $('#gif').remove()
+        labels = data.labels
+        defaultData = data.values
+        set_chart()
+        },
+        error: function(error_data){
+            console.log("error");
+            console.log(error_data);
+        }
+
+    })
+
+    function set_chart(){
+        var ctx = document.getElementById("myChart");
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '# of Flights',
+                    data: defaultData,
+                    backgroundColor: [
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 206, 86, 0.5)',
+                    'rgba(75, 192, 192, 0.5)',
+                    'rgba(153, 102, 255, 0.5)',
+                    'rgba(255, 159, 64, 0.5)',
+                    'rgba(255,115,185, 0.5)',
+                    'rgba(255,232,0, 0.5)',
+                    'rgba(198,29,29, 0.5)',
+                    'rgba(76,51,127, 0.5)'
+                    
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255,115,185, 1)',
+                    'rgba(255,232,0, 1)',
+                    'rgba(198,29,29, 1)',
+                    'rgba(76,51,127, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+}
+{%endblock%}
+
+</script>
+
+{%block content%}
+    <!-- Page Content -->
+    <div id="page-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Busiest Airports in California</h1>
+                    <div class="col-md-6 col-md-offset-3">
+                        <img style='display: block;margin: 0 auto;' id='gif' src='/static/images/loading.gif'>
+                        <canvas id="myChart" width="400" height="400"></canvas>
+                    </div>
+
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+
+{%endblock%}
+
+
+
+
+

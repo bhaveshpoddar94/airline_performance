@@ -1,0 +1,152 @@
+{% extends 'pages/blank.html' %}
+
+{% block head %}
+{%endblock%}
+
+<script type="text/javascript">
+{%block jquery%}
+    $('#main').append("<img style='display: block; margin: 0 auto;' id='gif' src='/static/images/loading.gif'>")
+    var endpoint = '/api/busiest-routes/'
+    $.ajax({
+        method: "GET",
+        url: endpoint,
+        success: function(data){
+        $('#gif').remove()
+        $('#main').append("<canvas id='myChart' width='400' height='400'></canvas>")
+        labels = data.labels
+        defaultData = data.values
+        set_chart()
+        },
+        error: function(error_data){
+            console.log("error")
+            console.log(error_data)
+        }
+
+    })
+
+    function set_chart(){
+        var ctx = document.getElementById("myChart");
+        var myChart = new Chart(ctx, {
+            type: 'polarArea',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '# of Flights',
+                    data: defaultData,
+                    backgroundColor: [
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 206, 86, 0.5)',
+                    'rgba(75, 192, 192, 0.5)',
+                    'rgba(153, 102, 255, 0.5)',
+                    'rgba(255, 159, 64, 0.5)',
+                    'rgba(255,115,185, 0.5)',
+                    'rgba(255,232,0, 0.5)',
+                    'rgba(198,29,29, 0.5)',
+                    'rgba(76,51,127, 0.5)'
+                    
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255,115,185, 1)',
+                    'rgba(255,232,0, 1)',
+                    'rgba(198,29,29, 1)',
+                    'rgba(76,51,127, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+}
+
+$("#submit").click(function(){
+    $('#myChart').remove()
+    $.ajax({
+        method: "GET",
+        url: endpoint,
+        data:{
+            'state1': $('#state1').val(),
+            'state2': $('#state2').val(),
+            'airline': $('#airline').val()
+        },
+        success: function(data){
+        labels = data.labels
+        defaultData = data.values
+        $('#gif').remove()
+        $('#main').append("<canvas id='myChart' width='400' height='400'></canvas>")
+        set_chart()
+        },
+        error: function(error_data){
+            console.log("error")
+            console.log(error_data)
+        }
+
+    })
+})
+{%endblock%}
+
+
+</script>
+
+{%block content%}
+    <!-- Page Content -->
+    <div id="page-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Busiest Routes Analysis</h1>
+                        <select id="state1" name="state1" style="width: 25%" id="airlineopt">
+                            <option value="all" selected>Select State 1</option>
+                            {% for item in states %}
+                                <option value="{{item}}">
+                                    {{item}}
+                                </option>
+                            {% endfor %}
+                            <option>ALL</option>
+                        </select>
+                        <select id='state2' name="state2" style="width: 25%" id="airlineopt">
+                            <option value="all" selected>Select State 2</option>
+                            {% for item in states %}
+                                <option value="{{item}}">
+                                    {{item}}
+                                </option>
+                            {% endfor %}
+                            <option value="all">ALL</option>
+                        </select>
+                        <select id="airline" name="airline" style="width: 25%" id="airlineopt">
+                            <option value="all" selected>Select an Airline</option>
+                            {% for item in airlines %}
+                                <option value="{{item}}">
+                                    {{item}}
+                                </option>
+                            {% endfor %}
+                            <option value="all">ALL</option>
+                        </select>
+                        <input id="submit" class="btn btn-primary" type="submit" name="submit">
+                    <div id="main" class="col-md-8 col-md-offset-2">
+                           
+                    </div>
+
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+
+{%endblock%}

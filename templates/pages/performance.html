@@ -1,0 +1,159 @@
+{% extends 'pages/blank.html' %}
+
+{% block head %}
+{%endblock%}
+
+<script type="text/javascript">
+
+{%block jquery%}
+$("#airsub").click(function(){
+    $('#myChart1').remove()
+    $('#myChart2').remove()
+    $('#myChart3').remove()
+    $('#myChart4').remove()
+    $('#ch1').append("<img style='display: block;\
+                                    margin: 0 auto;' id='gif' src='/static/images/loading.gif'>")
+    var value1 = $('#airlineopt1').val()
+    var value2 = $('#airlineopt2').val()
+    var endpoint = '/api/perf'
+    $.ajax({
+        method: "GET",
+        url: endpoint,
+        data:{
+            'airline1': value1,
+            'airline2': value2
+        },
+        success: function(data){
+            $('#gif').remove()
+            $('#ch1').append('<canvas id="myChart1" width="400" height="400"></canvas>')
+            $('#ch2').append('<canvas id="myChart2" width="400" height="400"></canvas>')
+            $('#ch3').append('<canvas id="myChart3" width="400" height="400"></canvas>')
+            $('#ch4').append('<canvas id="myChart4" width="400" height="400"></canvas>')
+            labels = data.labels
+            av1 = data.av1
+            dv1 = data.dv1
+            anum1 = data.anum1
+            dnum1 = data.dnum1
+            av2 = data.av2
+            dv2 = data.dv2
+            anum2 = data.anum2
+            dnum2 = data.dnum2
+            air1 = data.airline1
+            air2 = data.airline2
+            set_chart(1, dv1, dv2, air1 + "'s Average Departure Delay", air2 + "'s Average Departure Delay")
+            set_chart(2, dnum1, dnum2, air1 + "'s Late Departures", air2 + "'s Late Departures")
+            set_chart(3, av1, av2, air1 + "'s Average Arrival Delay", air2 + "'s Average Arrival Delay")
+            set_chart(4, anum1, anum2, air1 + "'s Late Arrivals", air2 + "'s Late Arrivals")
+        },
+        error: function(error_data){
+            console.log("error")
+            console.log(error_data)
+        }
+
+    })
+});
+    function set_chart(i, a, b, air1, air2){
+        var ctx = document.getElementById("myChart"+String(i));
+        var myChart = new Chart(ctx,{
+            type:'bar',
+            data:{
+                labels: labels,
+                datasets:[{
+                    type: 'bar',
+                    label: air1,
+                    data: a,
+                    backgroundColor:[
+                        'rgba(254,255,140,1)',
+                        'rgba(254,255,140,1)',
+                        'rgba(254,255,140,1)',
+                        'rgba(254,255,140,1)',
+                    ],
+                    borderColor:[
+                        'rgba(254,255,140,1)',
+                        'rgba(254,255,140,1)',
+                        'rgba(254,255,140,1)',
+                        'rgba(254,255,140,1)',
+                    ],
+                    borderWidth: 1
+                },
+                {
+                    type: 'bar',
+                    label: air2,
+                    data: b,
+                    backgroundColor:[
+                        'rgba(255,161,98,1)',
+                        'rgba(255,161,98,1)',
+                        'rgba(255,161,98,1)',
+                        'rgba(255,161,98,1)',
+                    ],
+                    borderColor:[
+                        'rgba(255,161,98,1)',
+                        'rgba(255,161,98,1)',
+                        'rgba(255,161,98,1)',
+                        'rgba(255,161,98,1)',
+                    ],
+                    borderWidth: 1
+                },
+
+        ]},
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+}
+
+{%endblock%}
+
+
+</script>
+{%block content%}
+    <!-- Page Content -->
+    <div id="page-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Performance</h1>
+                    <div class="row">
+                        <select style="width: 25%" id="airlineopt1">
+                        {% for item in airlines %}
+                            <option value="{{item}}">
+                                {{item}}
+                            </option>
+                        {% endfor %}
+                        </select>
+                        <select style="width: 25%" id="airlineopt2">
+                        {% for item in airlines %}
+                            <option value="{{item}}">
+                                {{item}}
+                            </option>
+                        {% endfor %}
+                        </select>
+                        <input id="airsub" class="btn btn-primary" type="submit" name="submit">
+                    </div>
+                    <div class="row">
+                        <div id="ch1" class="col-md-6">
+                        </div>
+                        <div id="ch3" class="col-md-6">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div id="ch2" class="col-md-6">
+                        </div>
+                        <div id="ch4" class="col-md-6">
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+{%endblock%}

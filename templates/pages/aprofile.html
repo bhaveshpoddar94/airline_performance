@@ -1,0 +1,365 @@
+{% extends 'pages/blank.html' %}
+
+{% block head %}
+{%endblock%}
+
+<script type="text/javascript">
+
+{%block jquery%}
+$("#airsub").click(function(){
+    $('#myChart1').remove()
+    $('#myChart2').remove()
+    $('#myChart3').remove()
+    $('#myChart4').remove()
+    $('#ch1').append("<img style='display: block;\
+                                    margin: 0 auto;' id='gif' src='/static/images/loading.gif'>")
+    var value = $('#airlineopt1').val()
+    var endpoint = '/airline-profile'
+    $.ajax({
+        method: "GET",
+        url: endpoint,
+        data:{
+            'airline': value
+        },
+        success: function(data){
+            $('#gif').remove()
+            $('#ch1').append('<canvas id="myChart1" width="400" height="400"></canvas>')
+            $('#ch2').append('<canvas id="myChart2" width="400" height="400"></canvas>')
+            $('#ch3').append('<canvas id="myChart3" width="400" height="400"></canvas>')
+            $('#ch4').append('<canvas id="myChart4" width="400" height="400"></canvas>')
+            labels = data.labels
+            perf = data.perf
+            labels = ["Cancelled","Diverted","Late Arrivals","Late Departures"]
+            inc = data.incoming
+            out = data.outgoing
+            fd = data.fd
+            flabels = data.flabels
+            slabels = data.slabels
+            set_chart(perf, labels)
+            set_chart1(inc, slabels)
+            set_chart2(out, slabels)
+            set_chart3(fd, flabels)
+        },
+        error: function(error_data){
+            console.log("error")
+            console.log(error_data)
+        }
+
+    })
+});
+    function set_chart(a, b){
+        var ctx = document.getElementById("myChart1");
+        var myChart = new Chart(ctx,{
+            type:'bar',
+            data:{
+                labels: b,
+                datasets: [{
+                    label: '# of Trips',
+                    data: a,
+                    backgroundColor: [
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)'
+                    
+                ],
+                borderColor: [
+                    'rgba(255,115,185, 1)',
+                    'rgba(255,232,0, 1)',
+                    'rgba(198,29,29, 1)',
+                    'rgba(76,51,127, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+}
+
+function set_chart1(a, b){
+        var ctx = document.getElementById("myChart3");
+        var myChart = new Chart(ctx,{
+            type:'polarArea',
+            data:{
+                labels: b,
+                datasets: [{
+                    label: '# of Trips',
+                    data: a,
+                    backgroundColor: [
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)'
+                    
+                ],
+                borderColor: [
+                    'rgba(255,115,185, 1)',
+                    'rgba(255,232,0, 1)',
+                    'rgba(198,29,29, 1)',
+                    'rgba(76,51,127, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+}
+
+function set_chart2(a, b){
+        var ctx = document.getElementById("myChart4");
+        var myChart = new Chart(ctx,{
+            type:'polarArea',
+            data:{
+                labels: b,
+                datasets: [{
+                    label: '# of Trips',
+                    data: a,
+                    backgroundColor: [
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(76,51,127, 0.5)'
+                    
+                ],
+                borderColor: [
+                    'rgba(255,115,185, 1)',
+                    'rgba(255,232,0, 1)',
+                    'rgba(198,29,29, 1)',
+                    'rgba(76,51,127, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+}
+
+function set_chart3(a, b){
+        var ctx = document.getElementById("myChart2");
+        var myChart = new Chart(ctx,{
+            type:'bar',
+            data:{
+                labels: b,
+                datasets: [{
+                    label: 'Top ten flight numbers',
+                    data: a,
+                    backgroundColor: [
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,115,185, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(198,29,29, 0.5)',
+                        'rgba(76,51,127, 0.5)',
+                        'rgba(255,232,0, 0.5)',
+                        'rgba(76,51,127, 0.5)'
+                    
+                ],
+                borderColor: [
+                    'rgba(255,115,185, 1)',
+                    'rgba(255,232,0, 1)',
+                    'rgba(198,29,29, 1)',
+                    'rgba(76,51,127, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+}
+
+{%endblock%}
+
+
+</script>
+{%block content%}
+    <!-- Page Content -->
+    <div id="page-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Airline Profile</h1>
+                    <div class="row">
+                        <select style="width: 25%" id="airlineopt1">
+                        {% for item in airlines %}
+                            <option value="{{item}}">
+                                {{item}}
+                            </option>
+                        {% endfor %}
+                        </select>
+                        <input id="airsub" class="btn btn-primary" type="submit" name="submit">
+                    </div>
+                    <div class="row">
+                        <div id="ch1" class="col-md-6"></div>
+                        <div id="ch2" class="col-md-6"></div>
+                    </div>
+                    <div class="row">
+                        <div id="ch3"></div>
+                    </div>
+                    <div class="row">
+                        <div id="ch4"></div>
+                    </div>
+
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+{%endblock%}

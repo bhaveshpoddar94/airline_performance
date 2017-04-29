@@ -1,0 +1,279 @@
+{% extends 'pages/blank.html' %}
+
+<script type="text/javascript">
+{%block jquery%}
+    $(".flight").click(function(){
+        $('#myChart').remove()
+        $('#myChart1').remove()
+        $('.tripdata').remove()
+        $('.modal-header').append("<img style='display: block;\
+                                    margin: 0 auto;' id='gif' src='/static/images/loading.gif'>")
+        $('#myModal').modal('show')
+        var endpoint = '/api/flight-desc'
+        $.ajax({
+            method: "GET",
+            url: endpoint,
+            data:{
+                'airflight': $(this).data("id")
+            },
+            success: function(data){
+                $('#gif').remove()
+                airline = data.airline
+                flight_no = data.flight_no
+                arr1 = data.arr1
+                dep1 = data.dep1
+                arr2 = data.arr2
+                dep2 = data.dep2
+                route1 = data.route1
+                route2 = data.route2
+                labels = data.labels
+                av1 = data.avalues1
+                dv1 = data.dvalues1
+                av2 = data.avalues2
+                dv2 = data.dvalues2
+                $('#route1').append(
+                    "<h4 class='tripdata'>\
+                        Airline: " + airline+ "<br>\
+                        Flight Number: " + flight_no + "<br>\
+                        Route: " +route1+ "<br>\
+                        Departs at: " + dep1 + " hours<br>\
+                        Arrives at: " + arr1 + " hours<br>\
+                    </h4>\
+                    <canvas id='myChart' height=400, width=400><canvas>"
+                )
+                if(route2.length){
+                    $('#route2').append(
+                        "<h4 class='tripdata'>\
+                            Route: " +route2+ "<br>\
+                            Departs at: " + dep2 + "hours <br>\
+                            Arrives at: " + arr2 + "hours <br>\
+                        </h4>\
+                        <canvas id='myChart1' height=400, width=400><canvas>"
+                    )
+                }
+                set_chart()
+                set_chart1()
+            },
+            error: function(error_data){
+                console.log("error")
+                console.log(error_data)
+            }
+
+        })
+});
+
+function set_chart(){
+    var ctx = $("#myChart");
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+            {
+                type: 'bar',
+                label: 'Average Departure Delay',
+                data: dv1,
+                backgroundColor: [
+                    'rgba(255,103,0,0.5)',
+                    'rgba(255,103,0,0.5)',
+                    'rgba(255,103,0,0.5)',
+                    'rgba(255,103,0,0.5)',
+                    'rgba(255,103,0,0.5)',
+                    'rgba(255,103,0,0.5)',
+                    'rgba(255,103,0,0.5)'
+                    ],
+                borderColor: [
+                    'rgba(255,103,0,1)',
+                    'rgba(255,103,0,1)',
+                    'rgba(255,103,0,1)',
+                    'rgba(255,103,0,1)',
+                    'rgba(255,103,0,1)',
+                    'rgba(255,103,0,1)',
+                    'rgba(255,103,0,1)'
+                ],
+                borderWidth: 1
+            },
+            {
+                type: 'bar',
+                label: 'Average Arrival Delay',
+                data: av1,
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    ],
+                borderColor: [
+                    'rgba(54, 162, 235,1)',
+                    'rgba(54, 162, 235,1)',
+                    'rgba(54, 162, 235,1)',
+                    'rgba(54, 162, 235,1)',
+                    'rgba(54, 162, 235,1)',
+                    'rgba(54, 162, 235,1)',
+                    'rgba(54, 162, 235,1)',
+                ],
+                borderWidth: 1
+            },
+            // backgroundColor: [
+            //     'rgba(255, 99, 132, 0.5)',
+            //     'rgba(54, 162, 235, 0.5)'
+            //     ],
+            // borderColor: [
+            //     'rgba(255,99,132,1)',
+            //     'rgba(54, 162, 235, 1)',
+            // ],
+            // borderWidth: 1
+
+    ]},
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        }
+    }
+});
+}
+
+function set_chart1(){
+    var ctx = $("#myChart1");
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+            {
+                type: 'bar',
+                label: 'Average Departure Delay',
+                data: dv2,
+                backgroundColor: [
+                'rgba(255, 99, 132, 0.5)',
+                'rgba(255, 99, 132, 0.5)',
+                'rgba(255, 99, 132, 0.5)',
+                'rgba(255, 99, 132, 0.5)',
+                'rgba(255, 99, 132, 0.5)',
+                'rgba(255, 99, 132, 0.5)',
+                'rgba(255, 99, 132, 0.5)'
+                ],
+                borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(255, 99, 132, 1)'
+                ],
+                borderWidth: 1
+            },
+            {
+                type: 'bar',
+                label: 'Average Departure Delay',
+                data: av2,
+                backgroundColor: [
+                'rgba(54, 162, 235, 0.5)',
+                'rgba(54, 162, 235, 0.5)',
+                'rgba(54, 162, 235, 0.5)',
+                'rgba(54, 162, 235, 0.5)',
+                'rgba(54, 162, 235, 0.5)',
+                'rgba(54, 162, 235, 0.5)',
+                'rgba(54, 162, 235, 0.5)',
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235)',
+                    'rgba(54, 162, 235)',
+                    'rgba(54, 162, 235)',
+                    'rgba(54, 162, 235)',
+                    'rgba(54, 162, 235)',
+                    'rgba(54, 162, 235)',
+                    'rgba(54, 162, 235)',
+                ],
+                borderWidth: 1
+            },
+    ]},
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        }
+    }
+});
+}
+{% endblock %}
+</script>
+
+{%block content%}
+    <!-- Page Content -->
+    <div id="page-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                    <h1 class="page-header">Performance</h1>
+                <!-- /.col-lg-12 -->
+            </div>
+            <div class="row">
+            <form action="/delayed-flights/" method="POST">{%csrf_token%}
+                <select name="airline" style="width: 25%" id="airlineopt">
+                    <option value="all">ALL</option>
+                    {% for item in airlines %}
+                        <option value="{{item}}">
+                            {{item}}
+                        </option>
+                    {% endfor %}
+                </select>
+                <input id="" class="btn btn-primary" type="submit" name="submit">
+            </form>
+            </div>
+            <div class="row">
+                    {%for key, value in data.items%}
+                        <table class="table">
+                            <tr>
+                                <td colspan="4"><b>Airline - {{key}}</b></td>
+                            </tr>
+                            <tr>
+                                <td>Flight Number</td>
+                                <td>Delayed Flights</td>
+                                <td>Avg Arrival Delay</td>
+                                <td>Avg Departure Delay</td>
+                            </tr>
+                            {% for k, v in value.items%}
+                                <tr>
+                                    <td><a href="#" data-id="{{key}}-{{k}}" class="flight">{{k}}</a></td>
+                                    <td>{{v.0}}</td>
+                                    <td>{{v.1}} minutes</td>
+                                    <td>{{v.2}} minutes</td> 
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    {% endfor %}
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                  </div>
+                  <div id="body-modal" class="modal-body">
+                    <div id="route1"> 
+                    </div>
+                    <div id="route2">
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+{%endblock%}

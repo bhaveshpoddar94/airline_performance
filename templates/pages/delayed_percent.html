@@ -1,0 +1,56 @@
+{% extends 'pages/blank.html' %}
+{%block content%}
+    <!-- Page Content -->
+    <div id="page-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                    <h1 class="page-header">Delay Percentages</h1>
+                <!-- /.col-lg-12 -->
+            </div>
+            <div class="row">
+            <form action="/delayed-percent/" method="POST">{%csrf_token%}
+                <select name="state" id="airlineopt">
+                    <option value="all">ALL</option>
+                    {% for state in states %}
+                        <option value="{{state}}">
+                            {{state}}
+                        </option>
+                    {% endfor %}
+                </select>
+                <input type="radio" value="i" name="direction">Incoming
+                <input value="o" type="radio" name="direction">Outgoing
+                <input id="" class="btn btn-primary" type="submit" name="submit">
+            </form>
+            </div>
+            <div class="row">
+                    {%for key, value in data.items%}
+                        <table class="table">
+                            <tr>
+                                <td colspan="6"><b>State - {{key}}</b></td>
+                            </tr>
+                            <tr>
+                                <td>Airline</td>
+                                <td>Weather</td>
+                                <td>NAS</td>
+                                <td>Security</td>
+                                <td>Late Aircraft</td>
+                                <td>Carrier</td>
+                            </tr>
+                            {% for k, v in value.items%}
+                                <tr>
+                                    <td>{{k}}</td>
+                                    <td>{{v.0}}</td>
+                                    <td>{{v.1}}</td>
+                                    <td>{{v.2}}</td>
+                                    <td>{{v.3}}</td>
+                                    <td>{{v.4}}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    {% endfor %}
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+{%endblock%}
